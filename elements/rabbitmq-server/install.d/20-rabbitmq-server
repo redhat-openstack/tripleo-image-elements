@@ -31,3 +31,5 @@ if [ "$DIB_INIT_SYSTEM" = "systemd" ]; then
     # Enable the service
     systemctl enable rabbitmq-server.service
 fi
+# Reserve the cluster port (61000) from the ephemeral port range.
+sysctl-append-value net.ipv4.ip_local_reserved_ports 61000
