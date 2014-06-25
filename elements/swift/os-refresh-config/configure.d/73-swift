@@ -6,6 +6,9 @@ set -o pipefail
 PARTPOWER=$(os-apply-config --key swift.part-power --key-default 10)
 REPLICAS=$(os-apply-config --key swift.replicas --key-default 1)
 DEVICES=$(os-apply-config --key swift.devices --key-default "" --type raw)
+OBJECT_SERVER_PORT=$(os-apply-config --key swift.object_server_port --key-default 6000)
+CONTAINER_SERVER_PORT=$(os-apply-config --key swift.container_server_port --key-default 6001)
+ACCOUNT_SERVER_PORT=$(os-apply-config --key swift.account_server_port --key-default 6002)
 
 if [ -z "$DEVICES" ] ; then
     echo "No swift devices to configure"
@@ -17,9 +20,10 @@ swift-ring-builder /etc/swift/container.builder create $PARTPOWER $REPLICAS 1
 swift-ring-builder /etc/swift/account.builder create $PARTPOWER $REPLICAS 1
 
 for DEVICE in ${DEVICES//,/ } ; do
-    swift-ring-builder /etc/swift/object.builder add ${DEVICE/\%PORT\%/6000} 100
-    swift-ring-builder /etc/swift/container.builder add ${DEVICE/\%PORT\%/6001} 100
-    swift-ring-builder /etc/swift/account.builder add ${DEVICE/\%PORT\%/6002} 100
+    DEVICE=$(place_in_zone $DEVICE)
+    swift-ring-builder /etc/swift/object.builder add ${DEVICE/\%PORT\%/$OBJECT_SERVER_PORT} 100
+    swift-ring-builder /etc/swift/container.builder add ${DEVICE/\%PORT\%/$CONTAINER_SERVER_PORT} 100
+    swift-ring-builder /etc/swift/account.builder add ${DEVICE/\%PORT\%/$ACCOUNT_SERVER_PORT} 100
 done
 
 swift-ring-builder /etc/swift/object.builder rebalance 999
