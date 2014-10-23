@@ -7,7 +7,7 @@
 set -eux
 set -o pipefail
 
-install-packages checkpolicy
+install-packages checkpolicy selinux-policy-devel
 mkdir -p /opt/stack/selinux-policy
 
 for file in $(ls $(dirname $0)/../custom-policies/*.te); do
