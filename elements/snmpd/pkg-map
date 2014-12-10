@@ -1,0 +1,13 @@
+{
+  "distro": {
+    "rhel": {
+      "nagios_plugins_package": "nagios-common"
+    },
+    "rhel7": {
+      "nagios_plugins_package": "nagios-common"
+    }
+  },
+  "default": {
+    "nagios_plugins_package": "nagios-plugins-all"
+  }
+}
