@@ -19,8 +19,7 @@ DISTRO=`lsb_release -si` || true
 
 IPT_FILE=
 
-if [[ "RedHatEnterpriseServer CentOS Fedora" =~ "$DISTRO" ]]; then
-
+if [[ "RedHatEnterpriseServer RedHatEnterpriseWorkstation CentOS Fedora" =~ "$DISTRO" ]]; then
     # Check if the iptables service is active
     if systemctl is-active iptables.service ; then
         IPT_FILE=/etc/sysconfig/iptables
